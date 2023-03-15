@@ -1,1 +1,0 @@
-A git parancsok leírása
