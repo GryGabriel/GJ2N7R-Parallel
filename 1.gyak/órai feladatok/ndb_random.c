@@ -14,7 +14,7 @@ int main(){
     
     int array[n];
     FILE *fp;
-    fp=fopen("n_random_szam","a+");
+    fp=fopen("n_random_szam.txt","a+");
     for(int i=0;i<n;i++){
         array[i]=rand()%(z-a)+a;
         fprintf(fp,"%d ", array[i]);
