@@ -4,7 +4,7 @@
 
 int main(){
     srand(time(NULL));
-    int a=500,z=1000;
+    int a=500,z=10000;
     int random_egesz = a+(rand()%(z-a));
     printf("Random egész: %d\n",random_egesz);
     
