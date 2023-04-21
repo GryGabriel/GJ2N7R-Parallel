@@ -1,1 +1,5 @@
-A Párhuzamos algoritmusok tárgyhoz tartozó feladatok és megoldásaik találhatók ebben a "repo"-ban.
+A repository a Párhuzamos algoritmusok tárgy feladatainak megoldását tartalmazza.
+
+Féléves feladat:
+- Sudoku megoldó program.
+- A szekvenciális és a több szálon futó megoldás összehasonlítása.
