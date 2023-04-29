@@ -1,5 +1,3 @@
-A repository a Párhuzamos algoritmusok tárgy feladatainak megoldását tartalmazza.
 
 Féléves feladat:
-- Sudoku megoldó program.
-- A szekvenciális és a több szálon futó megoldás összehasonlítása.
+- C nyelven POSIX és OpenMP függvénykönyvtárakkal, valamint Javascript nyelven Web worker-ek segítségével valósítom meg a könyvkódolás nevű titkosítást.
