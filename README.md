@@ -1,1 +1,3 @@
-A Párhuzamos algoritmusok tárgyhoz tartozó feladatok és megoldásaik találhatók ebben a "repo"-ban.
+
+Féléves feladat:
+- C nyelven POSIX és OpenMP függvénykönyvtárakkal, valamint Javascript nyelven Web worker-ek segítségével valósítom meg a könyvkódolás nevű titkosítást.
