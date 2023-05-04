@@ -8,5 +8,5 @@ Féléves feladat:
     -  Betűk helyett számokból állnak az üzenetek. Minden betűt két szám helyettesít. Az első azt jelzi, hogy hanyadik sorban van a betű, a második a betű helyét a sorban.
     A számsorozatot a program paraméterként kapja meg, majd ezt fejti vissza a szöveg alapján. 
 
-  A három módszeren kívül szekvenciálisan is megoldom a titkosítást, majd ezeket futási idejük alapján hasonlítom össze különböző üzenet- és szál méretek mellett.
+ - A három módszeren kívül szekvenciálisan is megoldom a titkosítást, majd ezeket futási idejük alapján hasonlítom össze különböző üzenet- és szál méretek mellett.
 
