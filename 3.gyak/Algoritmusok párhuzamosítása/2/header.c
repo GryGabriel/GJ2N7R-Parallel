@@ -117,3 +117,109 @@ void* count_parity_multithread(void* arg){
     free(args);
     return NULL;
 }
+
+void* count_zeros_multithread(void *arg){
+    Zero_counter* args = (Zero_counter*)arg;
+    int *array = args->array;
+    int index = args->index;
+    int *sizes = args->sizes;
+    int *zeros = args->zeros;
+
+    //Calculate the starting index by summing the previous sizes
+    int starting_index = 0;
+    for(int i=0;i <index;i++){
+        starting_index += sizes[i];
+    }
+
+    //List through the given elements
+    for(int i=starting_index;i<starting_index+sizes[index];i++){
+        if(array[i] == 0){
+            pthread_mutex_lock(args->mutex);
+            (*zeros)++;
+            pthread_mutex_unlock(args->mutex);
+        }
+    }
+
+    free(args);
+    return NULL;
+}
+
+void* count_negatives_multithread(void *arg){
+    Negative_counter* args = (Negative_counter*)arg;
+    int *array = args->array;
+    int index = args->index;
+    int *sizes = args->sizes;
+    int *negatives = args->negatives;
+
+    //Calculate the starting index by summing the previous sizes
+    int starting_index = 0;
+    for(int i=0;i <index;i++){
+        starting_index += sizes[i];
+    }
+
+    //List through the given elements
+    for(int i=starting_index;i<starting_index+sizes[index];i++){
+        if(array[i] < 0){
+            pthread_mutex_lock(args->mutex);
+            (*negatives)++;
+            pthread_mutex_unlock(args->mutex);
+        }
+    }
+
+    free(args);
+    return NULL;
+}
+
+void* count_abs(void *arg){
+    Absolute_counter* args = (Absolute_counter*)arg;
+    float *array = args->array;
+    int index = args->index;
+    int *sizes = args->sizes;
+    int *abs = args->abs;
+
+    //Calculate the starting index by summing the previous sizes
+    int starting_index = 0;
+    for(int i=0;i <index;i++){
+        starting_index += sizes[i];
+    }
+
+    //List through the given elements
+    for(int i=starting_index;i<starting_index+sizes[index];i++){
+        if(fabs(array[i]) < 1){
+            pthread_mutex_lock(args->mutex);
+            (*abs)++;
+            pthread_mutex_unlock(args->mutex);
+        }
+    }
+
+    free(args);
+    return NULL;
+}
+
+void* count_interval(void *arg){
+    Interval_counter* args = (Interval_counter*)arg;
+    float *array = args->array;
+    int index = args->index;
+    int *sizes = args->sizes;
+    int *counter = args->count;
+    int min = args->min;
+    int max = args->max;
+
+    //Calculate the starting index by summing the previous sizes
+    int starting_index = 0;
+    for(int i=0;i <index;i++){
+        starting_index += sizes[i];
+    }
+
+    //List through the given elements
+    for(int i=starting_index;i<starting_index+sizes[index];i++){
+        if(array[i] > min && array[i] < max){
+            pthread_mutex_lock(args->mutex);
+            (*counter)++;
+            pthread_mutex_unlock(args->mutex);
+        }
+    }
+
+    free(args);
+    return NULL;
+}

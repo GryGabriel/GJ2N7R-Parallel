@@ -21,6 +21,9 @@ int main(int argc, char *argv[]){
     int *sizes;
     pthread_mutex_t mutex;
     int multithread_zeros;
+    int multithread_negative_values;
+    int multithread_abs;
+    int multithread_fall_in_interval;
 
     clock_t sequential_begin, sequential_end;
     clock_t multithread_begin, multithread_end;
@@ -82,11 +85,11 @@ int main(int argc, char *argv[]){
          */
         min = -100;
         max = 100;
-        printf("%d value(s) is/are in the given interval [%d,%d]!\n", count_values_in_a_given_interval(floats, size, min, max), min, max);
+        printf("%d value(s) fall(s) in the given interval [%d,%d]!\n", count_values_in_a_given_interval(floats, size, min, max), min, max);
 
     sequential_end = clock();
     time_spent = (double)(sequential_end-sequential_begin)/CLOCKS_PER_SEC;
-    printf("Execution time sequentially: %f\n", time_spent);
+    printf("Execution time sequentially: %f!\n\n", time_spent);
 
 
 
@@ -140,18 +143,51 @@ int main(int argc, char *argv[]){
         }
         pthread_mutex_destroy(&mutex);
 
-        printf("Odds count: %d and even count: %d using multiple threads\n", odds, evens);
+        printf("Odds count: %d and even count: %d using multiple threads!\n", odds, evens);
 
         /**
          * Check if there are any 0 values in the array
          */
         multithread_zeros = 0;
+        pthread_mutex_init(&mutex, NULL);
+        for(int i=0;i<thread_count;i++){
+            Zero_counter* counter = (Zero_counter*)malloc(sizeof(Zero_counter));
+            counter->array = integers;
+            counter->index = i;
+            counter->sizes = sizes;
+            counter->zeros = &multithread_zeros;
+            counter->mutex = &mutex;
+            pthread_create(&threads[i], NULL, count_zeros_multithread, counter);
+        }
 
+         for(int i=0;i<thread_count;i++){
+            pthread_join(threads[i], NULL);
+        }
+        pthread_mutex_destroy(&mutex);
 
+        printf("Zero count: %d using multiple threads!\n", multithread_zeros);
 
         /**
          * Check if there are any negative values
          */
+        multithread_negative_values = 0;
+        pthread_mutex_init(&mutex, NULL);
+        for(int i=0;i<thread_count;i++){
+            Negative_counter* counter = (Negative_counter*)malloc(sizeof(Negative_counter));
+            counter->array = integers;
+            counter->index = i;
+            counter->sizes = sizes;
+            counter->negatives = &multithread_negative_values;
+            counter->mutex = &mutex;
+            pthread_create(&threads[i], NULL, count_negatives_multithread, counter);
+        }
+
+        for(int i=0;i<thread_count;i++){
+            pthread_join(threads[i], NULL);
+        }
+        pthread_mutex_destroy(&mutex);
+
+        printf("Negative value count: %d using multiple threads!\n", multithread_negative_values);
 
 
 
@@ -159,16 +195,54 @@ int main(int argc, char *argv[]){
      * Search for different values in the float array using multiple threads
     */
         /**
-         * Check whether the values absolute value is smaller than 1 
+         * Check whether the values' absolute value is smaller than 1 
          */
+        multithread_abs = 0;
+        pthread_mutex_init(&mutex, NULL);
+        for(int i=0;i<thread_count;i++){
+            Absolute_counter* counter = (Absolute_counter*)malloc(sizeof(Absolute_counter));
+            counter->array = floats;
+            counter->index = i;
+            counter->sizes = sizes;
+            counter->abs = &multithread_abs;
+            counter->mutex = &mutex;
+            pthread_create(&threads[i], NULL, count_abs, counter);
+        }
 
+        for(int i=0;i<thread_count;i++){
+            pthread_join(threads[i], NULL);
+        }
+        pthread_mutex_destroy(&mutex);
+
+        printf("%d value(s) has/have their absolute value smaller than 1!\n", multithread_abs);
 
         /**
          * Check if the values are in a given interval
          */
+        multithread_fall_in_interval = 0;
+        pthread_mutex_init(&mutex, NULL);
+        for(int i=0;i<thread_count;i++){
+            Interval_counter* counter = (Interval_counter*)malloc(sizeof(Interval_counter));
+            counter->array = floats;
+            counter->index = i;
+            counter->sizes = sizes;
+            counter->count = &multithread_fall_in_interval;
+            counter->mutex = &mutex;
+            counter->min = min;
+            counter->max = max;
+            pthread_create(&threads[i], NULL, count_interval, counter);
+        }
+
+        for(int i=0;i<thread_count;i++){
+            pthread_join(threads[i], NULL);
+        }
+        pthread_mutex_destroy(&mutex);
+
+        printf("%d value(s) fall(s) in the given interval [%d,%d]!\n", multithread_fall_in_interval, min, max);
 
 
-    }else{ //If there are less values than threads
+    }else{ //If there are less values than threads. NOT IMPLEMENTED
+    printf("NOT IMPLEMENTED (SIZE OF THE ARRAY IS SMALLER THAN THE NUMBER OF THREADS)!\n\n");
      /**
       * Search for different values in the integer array using multiple threads
       */
@@ -225,7 +299,7 @@ int main(int argc, char *argv[]){
 
         multithread_end = clock();
         time_spent = (double)(multithread_end - multithread_begin)/CLOCKS_PER_SEC;
-        printf("Execution time with multiple threads: %f\n", time_spent);
+        printf("Execution time with multiple threads: %f\n\n!", time_spent);
 
     free(threads);
     return 0;

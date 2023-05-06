@@ -53,6 +53,67 @@ typedef struct Parity_counter{
 */
 void count_elements_per_thread(int thread_count, int size, int *sizes);
 
+
+/**
+ * Count odd and even numbers in an integer array
+*/
 void* count_parity_multithread(void* arg);
+
+typedef struct Zero_counter{
+    int *array;
+    int *zeros;
+    int index;
+    int *sizes;
+    pthread_mutex_t *mutex;
+} Zero_counter;
+
+
+/**
+ * Count zero values in an integer array
+*/
+void* count_zeros_multithread(void *arg);
+
+
+typedef struct Negative_counter{
+    int *array;
+    int *negatives;
+    int index;
+    int *sizes;
+    pthread_mutex_t *mutex;
+} Negative_counter;
+
+/**
+ * Count negative values in an integer array;
+*/
+void* count_negatives_multithread(void *arg);
+
+
+typedef struct Absolute_counter{
+    float *array;
+    int *abs;
+    int index;
+    int *sizes;
+    pthread_mutex_t *mutex;
+} Absolute_counter;
+
+/**
+ * Count values that have their absolute value smaller than 1
+*/
+void* count_abs(void *arg);
+
+typedef struct Interval_counter{
+    float *array;
+    int *count;
+    int index;
+    int *sizes;
+    int min;
+    int max;
+    pthread_mutex_t *mutex;
+} Interval_counter;
+
+/**
+ * Count values that fall in a given interval
+*/
+void* count_interval(void *arg);
 
 #endif 
