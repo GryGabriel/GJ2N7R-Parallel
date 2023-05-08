@@ -14,9 +14,14 @@ typedef struct Prefix {
     int *array;
     int *elements_per_thread;
     int *prefix_array;
+    int k;
     pthread_mutex_t *mutex;
 } Prefix;
 
 void* crew_prefix_multithread(void *arg);
+
+void* erew_prefix_multithread1(void *arg);
+
+void* erew_prefix_multithread2(void *arg);
 
 #endif

@@ -15,6 +15,7 @@ int main(int argc, char *argv[]){ //The first parameter is the array size, the s
     int *elements_per_thread;
     int *crew_prefix_array;
     int *erew_prefix_array;
+    int erew_k;
     pthread_mutex_t mutex;
 
     clock_t begin, end;
@@ -76,6 +77,7 @@ int main(int argc, char *argv[]){ //The first parameter is the array size, the s
     
             for(int i=0;i<thread_count;i++){
                 pthread_join(threads[i], NULL);
+                printf("%d.: %d\n", i+1, crew_prefix_array[i]);
             }
 
             pthread_mutex_destroy(&mutex);
@@ -88,12 +90,50 @@ int main(int argc, char *argv[]){ //The first parameter is the array size, the s
         begin = clock();
 
             erew_prefix_array = (int*)calloc(array_size, sizeof(int));
+            pthread_mutex_init(&mutex, NULL);
+
             erew_prefix_array[0] = array[0];
-            for(int i=1;i<thread_count;i++){
+            for(int i=0;i<thread_count;i++){
                 Prefix* erew_struct = (Prefix*)malloc(sizeof(Prefix));
-                
+                erew_struct->index = i;
+                erew_struct->array = array;
+                erew_struct->elements_per_thread = elements_per_thread;
+                erew_struct->prefix_array = erew_prefix_array;
+                pthread_create(&threads[i], NULL, erew_prefix_multithread1, erew_struct);
             }
 
+            for(int i=0;i<thread_count;i++){
+                pthread_join(threads[i], NULL);
+            }
+
+            erew_k=1;
+            while(erew_k < array_size){
+                for(int i=0;i<thread_count;i++){
+                    Prefix* erew_struct = (Prefix*)malloc(sizeof(Prefix));
+                    erew_struct->index = i;
+                    erew_struct->array = erew_prefix_array;
+                    erew_struct->elements_per_thread = elements_per_thread;
+                    erew_struct->prefix_array = erew_prefix_array;
+                    erew_struct->mutex = &mutex;
+                    erew_struct->k = erew_k;
+                    pthread_create(&threads[i], NULL, erew_prefix_multithread2, erew_struct);
+                }
+
+                for(int i=0;i<thread_count;i++){
+                    pthread_join(threads[i], NULL);
+                }
+
+                erew_k *= 2;
+            }
+            
+            for(int i=0;i<array_size;i++){
+                printf("%d.: %d\n", i+1, erew_prefix_array[i]);
+            }
+            
+
+            
+
+            pthread_mutex_destroy(&mutex);
 
         end = clock();
         time_spent = (double)(end-begin) / CLOCKS_PER_SEC;

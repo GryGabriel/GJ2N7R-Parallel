@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 void fill_array(int *array, int size){
     srand(time(NULL));
@@ -42,7 +43,9 @@ void* crew_prefix_multithread(void *arg){
 
         for(int i=start_index;i<end_index;i++){
             for(int j=0;j<=i;j++){
+                pthread_mutex_lock(crew_struct->mutex);
                 crew_prefix_array[i] += array[j];
+                pthread_mutex_unlock(crew_struct->mutex);
             }
         }
 
@@ -51,6 +54,58 @@ void* crew_prefix_multithread(void *arg){
     return NULL;
 }
 
-void* erew_prefix_multithread(void *arg){
-    
+void* erew_prefix_multithread1(void *arg){
+    Prefix* erew_struct = (Prefix*)arg;
+    int index = erew_struct->index;
+    int *array = erew_struct->array;
+    int *elements_per_thread = erew_struct->elements_per_thread;
+    int *erew_prefix_array = erew_struct->prefix_array;
+    int start_index;
+    int end_index;
+
+    //Inicialize start-end indexes
+        start_index = 0;
+        for(int i=0;i<index;i++){
+            start_index+= elements_per_thread[i];
+        }
+        end_index = start_index+elements_per_thread[index];
+    //Calculate prefixes
+        for(int i=start_index;i<end_index;i++){
+            if(i != 0){
+                erew_prefix_array[i] = array[i-1] + array[i];
+            }
+        }
+
+        free(erew_struct);
+
+        return NULL;
+}
+
+void* erew_prefix_multithread2(void *arg){
+    Prefix* erew_struct = (Prefix*)arg;
+    int index = erew_struct->index;
+    int *array = erew_struct->array;
+    int *elements_per_thread = erew_struct->elements_per_thread;
+    int *erew_prefix_array = erew_struct->prefix_array;
+    int start_index;
+    int end_index;
+    int k = erew_struct->k+1;
+
+    //Inicialize start-end indexes
+        start_index = 0;
+        for(int i=0;i<index;i++){
+            start_index+= elements_per_thread[i];
+        }
+        end_index = start_index+elements_per_thread[index];
+    //Calculate prefixes
+        for(int i=start_index;i<end_index;i++){
+            if(i != 0){
+                pthread_mutex_lock(erew_struct->mutex);
+                erew_prefix_array[i] = array[i-k] + array[i];
+                pthread_mutex_unlock(erew_struct->mutex);
+            }
+        }
+
+        free(erew_struct);
+        return NULL;
 }
