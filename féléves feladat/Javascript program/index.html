@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Parallel computing</title>
+</head>
+<body>
+
+    <div class="window">
+        <div class="inputBox">
+            <div class="inputEncrypt">
+                <input id="inputFieldEncrypt" type="text" placeholder="Add text to encrypt">
+                <button id="inputButtonEncrypt">Encrypt</button>
+            </div>
+            <div class="inputDecrypt">
+                <input id="inputFieldDecrypt" type="text" placeholder="Add code to decrypt">
+                <button id="inputButtonDecrypt">Decrypt</button>
+            </div>
+        </div>
+        <div class="resultBox">
+            <div class="status">
+                <p>Status:&nbsp</p>
+                <p id="displayStatus"></p>
+            </div>
+
+            <div class="input">
+                <p>Input:&nbsp</p>
+                <p id="displayInput"></p>
+            </div>
+
+            <div class="result">
+                <p>Result:&nbsp</p>
+                <p id="displayResult"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="input.js"></script>
+    <script src="decrypt.js"></script>
+    <script src="encrypt.js"></script>
+    <script src="text.js"></script>
+</body>
+</html>
